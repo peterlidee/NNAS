@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import SignInButton from './SignInButton';
+import NavbarUser from './NavbarUser';
 
 export default async function NavBar() {
   return (
@@ -7,7 +7,7 @@ export default async function NavBar() {
       <Link href='/' className='mr-auto'>
         home
       </Link>
-      <SignInButton />
+      <NavbarUser />
     </nav>
   );
 }
