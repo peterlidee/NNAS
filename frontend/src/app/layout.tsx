@@ -7,6 +7,8 @@ import NavBar from '@/components/header/Navbar';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]/authOptions';
 import Provider from '@/components/Provider';
+import LoggedInClient from '@/components/loggedIn/LoggedInClient';
+import LoggedInServer from '@/components/loggedIn/LoggedInServer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,6 +28,10 @@ export default async function RootLayout({
         <Provider session={session}>
           <div className='max-w-6xl mx-auto'>
             <NavBar />
+            <div className='flex gap-4 w-full'>
+              <LoggedInClient />
+              <LoggedInServer />
+            </div>
             <main className='my-4'>{children}</main>
           </div>
         </Provider>
