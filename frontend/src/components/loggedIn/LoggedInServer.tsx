@@ -7,7 +7,7 @@ export default async function LoggedInServer() {
   return (
     <div
       className={`p-4 basis-2/4 rounded-sm text-center ${
-        session ? 'bg-green-400' : 'bg-red-400'
+        session ? 'bg-green-200' : 'bg-red-200'
       }`}
     >
       Server:{' '}
