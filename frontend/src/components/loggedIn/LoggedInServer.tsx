@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 
 export default async function LoggedInServer() {
   const session = await getServerSession(authOptions);
-  console.log('getServerSession', session);
+  // console.log('getServerSession', session);
   return (
     <div
       className={`p-4 basis-2/4 rounded-sm text-center ${
