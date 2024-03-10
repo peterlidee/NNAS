@@ -9,11 +9,11 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, trigger, profile, user, session }) {
+    async jwt({ token, trigger, account, user, session }) {
       // console.log('jwt callback', {
       //   token,
       //   trigger,
-      //   profile,
+      //   account,
       //   user,
       //   session,
       // });
