@@ -37,6 +37,9 @@ export const authOptions: NextAuthOptions = {
             // customize token
             // name and email will already be on here
             token.strapiToken = strapiLoginResponse.jwt;
+            token.strapiUserId = strapiLoginResponse.user.id;
+            token.provider = account.provider;
+            token.blocked = strapiLoginResponse.user.blocked;
           } catch (error) {
             console.error('strapi error', error);
             throw error;
@@ -51,7 +54,12 @@ export const authOptions: NextAuthOptions = {
       //   token,
       //   session,
       // });
+
       session.strapiToken = token.strapiToken;
+      session.provider = token.provider;
+      session.user.strapiUserId = token.strapiUserId;
+      session.user.blocked = token.blocked;
+
       return session;
     },
   },
