@@ -51,6 +51,7 @@ export const authOptions: NextAuthOptions = {
       //   token,
       //   session,
       // });
+      session.strapiToken = token.strapiToken;
       return session;
     },
   },
