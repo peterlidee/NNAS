@@ -11,6 +11,19 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    async signIn({ user, account, profile }) {
+      // console.log('singIn callback', { account, profile, user });
+      if (
+        account &&
+        account.provider === 'google' &&
+        profile &&
+        'email_verified' in profile
+      ) {
+        if (!profile.email_verified) return false;
+      }
+      return true;
+    },
+
     async jwt({ token, trigger, account, user, session }) {
       // console.log('jwt callback', {
       //   token,
@@ -30,6 +43,7 @@ export const authOptions: NextAuthOptions = {
             );
             if (!strapiResponse.ok) {
               const strapiError: StrapiErrorT = await strapiResponse.json();
+              // console.log('strapiError', strapiError);
               throw new Error(strapiError.error.message);
             }
             const strapiLoginResponse: StrapiLoginResponseT =
@@ -41,7 +55,6 @@ export const authOptions: NextAuthOptions = {
             token.provider = account.provider;
             token.blocked = strapiLoginResponse.user.blocked;
           } catch (error) {
-            console.error('strapi error', error);
             throw error;
           }
         }
@@ -69,5 +82,6 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: '/signin',
+    error: '/authError',
   },
 };
