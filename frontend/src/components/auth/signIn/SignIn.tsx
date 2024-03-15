@@ -3,6 +3,7 @@ import GoogleSignInButton from './GoogleSignInButton';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 import GoogleSignInError from './GoogleSignInError';
+import SignInForm from './SignInForm';
 
 export default async function SignIn() {
   const session = await getServerSession(authOptions);
@@ -21,7 +22,7 @@ export default async function SignIn() {
               create a new account.
             </Link>
           </p>
-          [form]
+          <SignInForm />
           <div className='text-center relative my-8 after:content-[""] after:block after:w-full after:h-[1px] after:bg-zinc-300 after:relative after:-top-3 after:z-0'>
             <span className='bg-zinc-100 px-4 relative z-10 text-zinc-400'>
               or
