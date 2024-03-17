@@ -1,6 +1,30 @@
+'use client';
+
+import { signIn } from 'next-auth/react';
+import { useState } from 'react';
+
+const initialState = {
+  identifier: '',
+  password: '',
+};
+
 export default function SignInForm() {
+  const [data, setData] = useState(initialState);
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
+  }
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    await signIn('credentials', {
+      identifier: data.identifier,
+      password: data.password,
+    });
+  }
   return (
-    <form method='post' className='my-8'>
+    <form onSubmit={handleSubmit} method='post' className='my-8'>
       <div className='mb-3'>
         <label htmlFor='identifier' className='block mb-1'>
           Email or username *
@@ -11,6 +35,8 @@ export default function SignInForm() {
           name='identifier'
           required
           className='bg-white border border-zinc-300 w-full rounded-sm p-2'
+          value={data.identifier}
+          onChange={handleChange}
         />
       </div>
       <div className='mb-3'>
@@ -23,6 +49,8 @@ export default function SignInForm() {
           name='password'
           required
           className='bg-white border border-zinc-300 w-full rounded-sm p-2'
+          value={data.password}
+          onChange={handleChange}
         />
       </div>
       <div className='mb-3'>
