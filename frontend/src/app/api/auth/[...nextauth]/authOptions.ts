@@ -20,8 +20,29 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password *', type: 'password' },
       },
       async authorize(credentials, req) {
-        console.log('calling authorize');
-        return null;
+        const strapiResponse = await fetch(
+          `${process.env.STRAPI_BACKEND_URL}/api/auth/local`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-type': 'application/json',
+            },
+            body: JSON.stringify({
+              identifier: credentials!.identifier,
+              password: credentials!.password,
+            }),
+          }
+        );
+
+        const data: StrapiLoginResponseT = await strapiResponse.json();
+        return {
+          name: data.user.username,
+          email: data.user.email,
+          id: data.user.id.toString(),
+          strapiUserId: data.user.id,
+          blocked: data.user.blocked,
+          strapiToken: data.jwt,
+        };
       },
     }),
   ],
@@ -73,8 +94,15 @@ export const authOptions: NextAuthOptions = {
             throw error;
           }
         }
+        if (account.provider === 'credentials') {
+          // for credentials, not google provider
+          // name and email are taken care of by next-auth or authorize
+          token.strapiToken = user.strapiToken;
+          token.strapiUserId = user.strapiUserId;
+          token.provider = account.provider;
+          token.blocked = user.blocked;
+        }
       }
-
       return token;
     },
     async session({ token, session }) {
