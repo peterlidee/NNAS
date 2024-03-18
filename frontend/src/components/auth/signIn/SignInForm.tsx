@@ -1,12 +1,14 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { z } from 'zod';
 
 type FormErrorsT = {
   identifier?: undefined | string[];
   password?: undefined | string[];
+  strapiError?: string;
 };
 
 const initialState = {
@@ -25,6 +27,11 @@ const formSchema = z.object({
 export default function SignInForm() {
   const [data, setData] = useState(initialState);
   const [errors, setErrors] = useState<FormErrorsT>({});
+  const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
+  const router = useRouter();
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setData({
       ...data,
@@ -33,11 +40,13 @@ export default function SignInForm() {
   }
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setLoading(true);
 
     const validatedFields = formSchema.safeParse(data);
 
     if (!validatedFields.success) {
       setErrors(validatedFields.error.formErrors.fieldErrors);
+      setLoading(false);
     } else {
       // no zod errors
       const signInResponse = await signIn('credentials', {
@@ -45,6 +54,18 @@ export default function SignInForm() {
         password: data.password,
         redirect: false,
       });
+      if (signInResponse && !signInResponse?.ok) {
+        setErrors({
+          strapiError: signInResponse.error
+            ? signInResponse.error
+            : 'Something went wrong.',
+        });
+        setLoading(false);
+      } else {
+        // handle success
+        router.push(callbackUrl);
+        router.refresh();
+      }
     }
   }
   return (
@@ -90,7 +111,9 @@ export default function SignInForm() {
       <div className='mb-3'>
         <button
           type='submit'
-          className='bg-blue-400 px-4 py-2 rounded-md disabled:bg-sky-200 disabled:text-gray-500'
+          className='bg-blue-400 px-4 py-2 rounded-md disabled:bg-sky-200 disabled:text-gray-400 disabled:cursor-wait'
+          disabled={loading}
+          aria-disabled={loading}
         >
           sign in
         </button>
@@ -98,6 +121,11 @@ export default function SignInForm() {
       {errors.password || errors.identifier ? (
         <div className='text-red-700' aria-live='polite'>
           Something went wrong. Please check your data.
+        </div>
+      ) : null}
+      {errors.strapiError ? (
+        <div className='text-red-700' aria-live='polite'>
+          Something went wrong: {errors.strapiError}
         </div>
       ) : null}
     </form>
