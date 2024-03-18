@@ -40,9 +40,10 @@ export default function SignInForm() {
       setErrors(validatedFields.error.formErrors.fieldErrors);
     } else {
       // no zod errors
-      await signIn('credentials', {
+      const signInResponse = await signIn('credentials', {
         identifier: data.identifier,
         password: data.password,
+        redirect: false,
       });
     }
   }
