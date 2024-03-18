@@ -8,7 +8,7 @@ export default function SignInLink() {
   return (
     <Link
       href={`/signin?callbackUrl=${callbackUrl}`}
-      className='bg-sky-400 rounded-md px-4 py-2'
+      className='bg-blue-400 rounded-md px-4 py-2'
     >
       sign in
     </Link>
