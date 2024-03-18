@@ -2,14 +2,29 @@
 
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
+import { z } from 'zod';
+
+type FormErrorsT = {
+  identifier?: undefined | string[];
+  password?: undefined | string[];
+};
 
 const initialState = {
   identifier: '',
   password: '',
 };
 
+const formSchema = z.object({
+  identifier: z.string().min(2).max(30),
+  password: z
+    .string()
+    .min(6, { message: 'Password must be at least 8 characters long.' })
+    .max(30),
+});
+
 export default function SignInForm() {
   const [data, setData] = useState(initialState);
+  const [errors, setErrors] = useState<FormErrorsT>({});
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setData({
       ...data,
@@ -18,10 +33,18 @@ export default function SignInForm() {
   }
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    await signIn('credentials', {
-      identifier: data.identifier,
-      password: data.password,
-    });
+
+    const validatedFields = formSchema.safeParse(data);
+
+    if (!validatedFields.success) {
+      setErrors(validatedFields.error.formErrors.fieldErrors);
+    } else {
+      // no zod errors
+      await signIn('credentials', {
+        identifier: data.identifier,
+        password: data.password,
+      });
+    }
   }
   return (
     <form onSubmit={handleSubmit} method='post' className='my-8'>
@@ -38,6 +61,11 @@ export default function SignInForm() {
           value={data.identifier}
           onChange={handleChange}
         />
+        {errors?.identifier ? (
+          <div className='text-red-700' aria-live='polite'>
+            {errors.identifier[0]}
+          </div>
+        ) : null}
       </div>
       <div className='mb-3'>
         <label htmlFor='password' className='block mb-1'>
@@ -52,6 +80,11 @@ export default function SignInForm() {
           value={data.password}
           onChange={handleChange}
         />
+        {errors?.password ? (
+          <div className='text-red-700' aria-live='polite'>
+            {errors.password[0]}
+          </div>
+        ) : null}
       </div>
       <div className='mb-3'>
         <button
@@ -61,6 +94,11 @@ export default function SignInForm() {
           sign in
         </button>
       </div>
+      {errors.password || errors.identifier ? (
+        <div className='text-red-700' aria-live='polite'>
+          Something went wrong. Please check your data.
+        </div>
+      ) : null}
     </form>
   );
 }
