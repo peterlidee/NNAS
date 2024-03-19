@@ -18,7 +18,7 @@ export default async function SignIn() {
         <div>
           <p className='mb-4'>
             Sign in to your account or{' '}
-            <Link href='/register' className='underline'>
+            <Link href='/signup' className='underline'>
               create a new account.
             </Link>
           </p>
