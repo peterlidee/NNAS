@@ -59,8 +59,8 @@ export default async function ConfirmationSubmit({ confirmationToken }: Props) {
         <Link href='/login' className='underline'>
           login
         </Link>
+        .
       </p>
-      .
     </Wrapper>
   );
 }
