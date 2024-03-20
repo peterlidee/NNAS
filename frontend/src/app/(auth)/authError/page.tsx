@@ -6,7 +6,7 @@ type Props = {
 
 export default function AuthErrorPage({ searchParams }: Props) {
   return (
-    <div className='bg-zinc-100 rounded-sm p-4 mb-4'>
+    <div className='bg-zinc-100 rounded-sm px-4 py-8 mb-8'>
       AuthError: {searchParams.error}
     </div>
   );
