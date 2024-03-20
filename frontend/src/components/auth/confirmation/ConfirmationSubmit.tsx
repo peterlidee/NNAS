@@ -56,8 +56,8 @@ export default async function ConfirmationSubmit({ confirmationToken }: Props) {
       <h2 className='font-bold text-lg mb-4'>Email confirmed.</h2>
       <p>
         Your email was succesfully verified. You can now{' '}
-        <Link href='/login' className='underline'>
-          login
+        <Link href='/signin' className='underline'>
+          sign in
         </Link>
         .
       </p>
