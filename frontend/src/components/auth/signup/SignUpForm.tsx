@@ -4,7 +4,7 @@ import { useFormState } from 'react-dom';
 import signUpAction from './signUpAction';
 import PendingSubmitButton from '../PendingSubmitButton';
 
-type FieldErrorsT = {
+type InputErrorsT = {
   username?: string[];
   email?: string[];
   password?: string[];
@@ -17,7 +17,7 @@ type SignUpFormInitialStateT = {
 type SignUpFormErrorStateT = {
   error: true;
   message: string;
-  fieldErrors?: FieldErrorsT;
+  inputErrors?: InputErrorsT;
 };
 
 export type SignUpFormStateT = SignUpFormInitialStateT | SignUpFormErrorStateT;
@@ -44,9 +44,9 @@ export default function SignUpForm() {
           required
           className='border border-gray-300 w-full rounded-sm px-2 py-1'
         />
-        {state.error && state?.fieldErrors?.username ? (
+        {state.error && state?.inputErrors?.username ? (
           <div className='text-red-700' aria-live='polite'>
-            {state.fieldErrors.username[0]}
+            {state.inputErrors.username[0]}
           </div>
         ) : null}
       </div>
@@ -61,9 +61,9 @@ export default function SignUpForm() {
           required
           className='bg-white border border-zinc-300 w-full rounded-sm p-2'
         />
-        {state.error && state?.fieldErrors?.email ? (
+        {state.error && state?.inputErrors?.email ? (
           <div className='text-red-700' aria-live='polite'>
-            {state.fieldErrors.email[0]}
+            {state.inputErrors.email[0]}
           </div>
         ) : null}
       </div>
@@ -78,9 +78,9 @@ export default function SignUpForm() {
           required
           className='bg-white border border-zinc-300 w-full rounded-sm p-2'
         />
-        {state.error && state?.fieldErrors?.password ? (
+        {state.error && state?.inputErrors?.password ? (
           <div className='text-red-700' aria-live='polite'>
-            {state.fieldErrors.password[0]}
+            {state.inputErrors.password[0]}
           </div>
         ) : null}
       </div>
