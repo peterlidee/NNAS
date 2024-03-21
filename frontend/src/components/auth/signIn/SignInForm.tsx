@@ -134,6 +134,9 @@ export default function SignInForm() {
         >
           sign in
         </button>
+        <Link href='/password/requestreset' className='underline ml-3'>
+          Forgot password?
+        </Link>
       </div>
       {errors.password || errors.identifier ? (
         <div className='text-red-700' aria-live='polite'>
