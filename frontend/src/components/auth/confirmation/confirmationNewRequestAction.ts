@@ -15,15 +15,13 @@ export default async function confirmNewRequestAction(
   const validatedFields = formSchema.safeParse({
     email: formData.get('email'),
   });
-
   if (!validatedFields.success) {
     return {
       error: true,
-      fieldErrors: validatedFields.error.flatten().fieldErrors,
+      inputErrors: validatedFields.error.flatten().fieldErrors,
       message: 'Please verify your data.',
     };
   }
-
   const { email } = validatedFields.data;
 
   try {
@@ -39,25 +37,36 @@ export default async function confirmNewRequestAction(
       }
     );
 
-    // !strapiResponse.ok basically does not happen, if you enter an email, it will return
-    // status 200
-    // { email: 'email', sent: true }
-    // thus, hiding if the email actually exists in DB
+    // handle strapi error
     if (!strapiResponse.ok) {
       const response = {
         error: true,
-        message: 'An error occured',
+        message: '',
       };
-      return response;
-    }
+      // check if response in json-able
+      const contentType = strapiResponse.headers.get('content-type');
+      if (contentType === 'application/json; charset=utf-8') {
+        const data = await strapiResponse.json();
 
-    // we redirect on success
-  } catch (error) {
+        // we don't ever want to confirm that an email exists inside strapi DB
+        // but we can't redirect inside a try catch block
+        // return response only is this is not the case
+        // if it is the case we will fall through to the redirect
+        if (data.error.message !== 'Already confirmed') {
+          response.message = data.error.message;
+          return response;
+        }
+      } else {
+        response.message = strapiResponse.statusText;
+        return response;
+      }
+    }
+    // we redirect on success outside try cacth block
+  } catch (error: any) {
     // network error or something
-    console.log('[confirmationRequestAction] catch error', error);
     return {
       error: true,
-      message: 'Server error please try again later.',
+      message: 'message' in error ? error.message : error.statusText,
     };
   }
 

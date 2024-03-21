@@ -4,17 +4,25 @@ import { useFormState } from 'react-dom';
 import confirmationNewRequestAction from './confirmationNewRequestAction';
 import PendingSubmitButton from '../PendingSubmitButton';
 
-export type FieldErrorsT = {
+type InputErrorsT = {
   email?: string[];
 };
 
-export type ConfirmationNewRequestFormStateT = {
-  error: boolean;
-  fieldErrors?: FieldErrorsT;
-  message?: string;
+type InitialFormStateT = {
+  error: false;
 };
 
-const initialState: ConfirmationNewRequestFormStateT = {
+type ErrorFormStateT = {
+  error: true;
+  message: string;
+  inputErrors?: InputErrorsT;
+};
+
+export type ConfirmationNewRequestFormStateT =
+  | InitialFormStateT
+  | ErrorFormStateT;
+
+const initialState: InitialFormStateT = {
   error: false,
 };
 
@@ -45,9 +53,9 @@ export default function ConfirmationNewRequest() {
             required
             className='bg-white border border-zinc-300 w-full rounded-sm p-2'
           />
-          {state.error && state?.fieldErrors?.email ? (
+          {state.error && state?.inputErrors?.email ? (
             <div className='text-red-700' aria-live='polite'>
-              {state.fieldErrors.email[0]}
+              {state.inputErrors.email[0]}
             </div>
           ) : null}
         </div>
@@ -56,13 +64,6 @@ export default function ConfirmationNewRequest() {
         </div>
         {state.error && state.message ? (
           <div className='text-red-700' aria-live='polite'>
-            {state.message}
-          </div>
-        ) : null}
-
-        {!state.error && state.message ? (
-          <div className='text-green-700' aria-live='polite'>
-            {/* should be unreachable because we redirect in the register action */}
             {state.message}
           </div>
         ) : null}
