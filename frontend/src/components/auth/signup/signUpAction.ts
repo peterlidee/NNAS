@@ -23,7 +23,7 @@ export default async function signUpAction(
   if (!validatedFields.success) {
     return {
       error: true,
-      fieldErrors: validatedFields.error.flatten().fieldErrors,
+      inputErrors: validatedFields.error.flatten().fieldErrors,
       message: 'Please verify your data.',
     };
   }
