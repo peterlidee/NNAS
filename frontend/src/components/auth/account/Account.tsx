@@ -1,6 +1,7 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 import { getCurrentUser } from '@/lib/fetchData/getCurrentUser';
 import { getServerSession } from 'next-auth';
+import EditUsername from './EditUsername';
 
 export default async function Account() {
   const session = await getServerSession(authOptions);
@@ -11,10 +12,7 @@ export default async function Account() {
 
       <div className='mb-8'>
         <h3 className='font-bold mb-4 text-sky-700'>User Data</h3>
-        <div className='mb-2'>
-          <div className='block italic'>Username: </div>
-          <div>{currentUser.username}</div>
-        </div>
+        <EditUsername username={currentUser.username} />
         <div className='mb-2'>
           <div className='block italic'>Email: </div>
           <div>{currentUser.email}</div>
