@@ -90,6 +90,10 @@ export const authOptions: NextAuthOptions = {
       //   session,
       // });
 
+      if (trigger === 'update' && session?.username) {
+        token.name = session.username;
+      }
+
       if (account) {
         if (account.provider === 'google') {
           // we now know we are doing a sign in using GoogleProvider
