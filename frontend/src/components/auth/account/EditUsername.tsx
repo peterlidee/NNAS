@@ -2,6 +2,8 @@
 
 import { FormEvent, useState } from 'react';
 import editUsernameAction, { EditUsernameActionT } from './editUsernameAction';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   username: string;
@@ -13,6 +15,8 @@ export default function EditUsername({ username }: Props) {
   const [error, setError] = useState<null | string>(null);
   const [message, setMessage] = useState<null | string>(null);
   const [loading, setLoading] = useState(false);
+  const { update } = useSession();
+  const router = useRouter();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -48,7 +52,10 @@ export default function EditUsername({ username }: Props) {
       setMessage('Updated username.');
       setLoading(false);
 
-      // update session and token?
+      // update NextAuth token
+      await update({ username: actionResponse.data.username });
+      // refresh server components
+      router.refresh();
     }
   }
 
