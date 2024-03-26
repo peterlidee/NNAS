@@ -2,6 +2,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 import { getCurrentUser } from '@/lib/fetchData/getCurrentUser';
 import { getServerSession } from 'next-auth';
 import EditUsername from './EditUsername';
+import ChangePassword from '../password/ChangePassword';
 
 export default async function Account() {
   const session = await getServerSession(authOptions);
@@ -25,7 +26,7 @@ export default async function Account() {
 
       <div className='mb-8'>
         <h3 className='font-bold mb-4 text-sky-700'>Change password</h3>
-        [change password component]
+        <ChangePassword />
       </div>
     </div>
   );

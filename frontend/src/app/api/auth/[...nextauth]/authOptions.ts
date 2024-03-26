@@ -90,8 +90,14 @@ export const authOptions: NextAuthOptions = {
       //   session,
       // });
 
+      // change username update
       if (trigger === 'update' && session?.username) {
         token.name = session.username;
+      }
+
+      // change password update
+      if (trigger === 'update' && session?.strapiToken) {
+        token.strapiToken = session.strapiToken;
       }
 
       if (account) {
