@@ -1,8 +1,5 @@
 'use server';
 
-// TODO: test gmail from google account
-// bug: sends password to google account too!!!
-
 import { z } from 'zod';
 import { RequestPasswordResetFormStateT } from './RequestPasswordReset';
 
