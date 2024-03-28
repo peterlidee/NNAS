@@ -82,10 +82,7 @@ export default async function resetPasswordAction(
     // handle Strapi success
     // Strapi returns a user + token, we return the token as data.strapiToken
     // carefull, this will not invalidate old token
-    // TODO: add type here user
     const data: { jwt: string } = await strapiResponse.json();
-    // TODO: remove this
-    console.log('data', data);
     return {
       error: false,
       message: 'Success',
